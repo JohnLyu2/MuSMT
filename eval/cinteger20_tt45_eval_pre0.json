@@ -1,0 +1,48 @@
+{
+    "BATCH_SIZE": 24,
+    "Z3_PRE_TIME": 0,
+    "START_ID": 0,
+    "TOTAL_TIMEOUT": 300,
+    "TACTIC_TIMEOUT_LST": [
+        [36000, 45]
+      ],
+    "PRIOR_ACTION_EMBED_SIZE": 6,
+    "NNET_FOLDER": "./nnets/",
+    "NNET_FILE": "04-25_cinteger20_tt45.pth.tar",
+    "BENCHMARK_PATH": "/home/z52lu/benchmark/QF_NIA/20170427-VeryMax/CInteger/",
+    "MOVES": [
+        "simplify",
+        "smt",
+        "bit-blast",
+        "propagate-values",
+        "ctx-simplify",
+        "elim-uncnstr",
+        "solve-eqs",
+        "qfnia",
+        "lia2card",
+        "max-bv-sharing",
+        "nla2bv",
+        "qfnra-nlsat",
+        "cofactor-term-ite"
+    ],
+    "PROBES": [
+        "is-unbounded", "arith-max-deg", "arith-avg-deg", "arith-max-bw", "arith-avg-bw",
+        "is-qfnia", "is-qfbv-eq", "memory", "size", "num-exprs", "num-consts", "num-bool-consts", "num-arith-consts", "num-bv-consts",
+        "is-propositional", "is-qfbv"
+    ],
+    "NO_SUC": true,
+    "RESULT_FILE": "eval_04-25_cinteger20_tt45_pre0.csv",
+    "STATS": {
+        "arith-max-deg": [0, 2],
+        "arith-max-bw": [0, 35],
+        "arith-avg-bw": [0, 15],
+        "memory": [10, 3000],
+        "size": [0, 200],
+        "num-exprs": [0, 250000],
+        "num-consts": [0, 8000],
+        "num-bool-consts": [0, 100],
+        "num-arith-consts": [0, 8000],
+        "num-bv-consts": [0, 8000]
+    },
+    "HEADER": ["id", "path", "res", "rlimit", "runtime", "nn_time", "solver_time"]
+}

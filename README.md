@@ -1,0 +1,1 @@
+AlphaSMT is an adaptive Reinforcment Learning (RL) guided SMT solver. It is built on top of Z3 SMT solver. 

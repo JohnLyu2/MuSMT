@@ -1,0 +1,49 @@
+{
+    "BATCH_SIZE": 24,
+    "Z3_PRE_TIME": 10,
+    "START_ID": 0,
+    "TOTAL_TIMEOUT": 300,
+    "TACTIC_TIMEOUT_LST": [
+        [7, 3],
+        [60, 20],
+        [1000, 90]
+      ],
+    "PRIOR_ACTION_EMBED_SIZE": 6,
+    "NNET_FOLDER": "./nnets/",
+    "NNET_FILE": "04-30_lasso10_tid.pth.tar",
+    "BENCHMARK_PATH": "/home/z52lu/benchmark/QF_NRA/LassoRanker/",
+    "MOVES": [
+        "simplify",
+        "smt",
+        "bit-blast",
+        "propagate-values",
+        "ctx-simplify",
+        "elim-uncnstr",
+        "solve-eqs",
+        "max-bv-sharing",
+        "nla2bv",
+        "qfnra-nlsat",
+        "qfnra"
+    ],
+    "PROBES": [
+        "is-unbounded", "arith-max-deg", "arith-avg-deg", "arith-max-bw", "arith-avg-bw",
+        "is-qfnra", "is-qfbv-eq", "memory", "size", "num-exprs", "num-consts", "num-bool-consts", "num-arith-consts", "num-bv-consts",
+        "is-propositional", "is-qfbv"
+    ],
+    "NO_SUC": true,
+    "RESULT_FILE": "04-30_lasso10_tid_pre10.csv",
+    "STATS": {
+        "arith-max-deg": [0, 8],
+        "arith-avg-deg": [0, 1.5],
+        "arith-max-bw": [0, 35],
+        "arith-avg-bw": [0, 20],
+        "memory": [10, 6000],
+        "size": [0, 2000000],
+        "num-exprs": [0, 7000000],
+        "num-consts": [0, 1000000],
+        "num-bool-consts": [0, 70000],
+        "num-arith-consts": [0, 1000000],
+        "num-bv-consts": [0, 60000]
+    },
+    "HEADER": ["id", "path", "res", "rlimit", "runtime", "nn_time", "solver_time"]
+}

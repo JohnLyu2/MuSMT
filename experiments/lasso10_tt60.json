@@ -1,0 +1,81 @@
+{
+    "training_dir": "/home/z52lu/alpha_smt/example/qf_nra/lasso10/train",
+    "validation_dir": "/home/z52lu/alpha_smt/example/qf_nra/lasso10/val",
+  "file_ext": "smt2",
+  "no_suc": true,
+  "total_timeout": 300,
+  "tactic_timeout_lst": [
+    [36000, 60]
+  ],
+  "training_max_step": 10,
+  "coach_args": {
+        "numIters": 10,
+        "numEps": 100,
+        "tempThreshold": 15,
+        "maxlenOfQueue": 200000,
+        "numMCTSSims": 20,
+        "arenaCompare": 100,
+        "sample_number_val": 2,
+        "train_batch": 34,
+        "val_batch": 34,
+        "cpuct": 3,
+        "load_model": false,
+        "load_folder_file": ["./temp/","best.pth.tar"],
+        "numItersForTrainExamplesHistory": 20,
+        "log_to_file": 1,
+        "log_embed": false,
+        "json_cache": false
+      },
+ "probe_stats": {
+        "arith-max-deg": [0, 8],
+        "arith-avg-deg": [0, 1.5],
+        "arith-max-bw": [0, 35],
+        "arith-avg-bw": [0, 20],
+        "memory": [10, 6000],
+        "size": [0, 2000000],
+        "num-exprs": [0, 7000000],
+        "num-consts": [0, 1000000],
+        "num-bool-consts": [0, 70000],
+        "num-arith-consts": [0, 1000000],
+        "num-bv-consts": [0, 60000]
+    },
+    "tactics_config": {
+        "all_tactics": [
+            "simplify",
+            "smt",
+	        "bit-blast",
+            "propagate-values",
+	        "ctx-simplify",
+            "elim-uncnstr",
+            "solve-eqs",
+	        "max-bv-sharing",
+	        "nla2bv",
+	        "qfnra-nlsat",
+            "qfnra"
+	],
+	"allowed_params": {
+	    "simplify": {
+		"boolean": [
+		    "elim_and",
+		    "som",
+		    "blast_distinct",
+		    "flat",
+		    "hi_div0",
+		    "local_ctx",
+		    "hoist_mul"
+		]
+	    },
+	    "nla2bv": {
+		"integer": [
+		    ["nla2bv_max_bv_size", 0, 100]
+		]
+	    }
+	}
+},
+"probes": [
+    "is-unbounded", "arith-max-deg", "arith-avg-deg", "arith-max-bw", "arith-avg-bw",
+    "is-qfnra", "is-qfbv-eq", "memory", "size", "num-exprs", "num-consts", "num-bool-consts", "num-arith-consts", "num-bv-consts",
+    "is-propositional", "is-qfbv"
+],
+"prior_action_embed_size": 6
+}

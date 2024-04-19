@@ -1,0 +1,85 @@
+{
+    "training_dir": "example/qf_nia/cinteger20/train",
+    "validation_dir": "example/qf_nia/cinteger20/val",
+    "file_ext": "smt2",
+    "no_suc": true,
+    "total_timeout": 300,
+    "tactic_timeout_lst": [
+        [7, 3],
+        [60, 20],
+        [1000, 90]
+      ],
+    "training_max_step": 18,
+    "coach_args": {
+        "numIters": 10,
+        "numEps": 100,
+        "tempThreshold": 15,
+        "maxlenOfQueue": 200000,
+        "numMCTSSims": 25,
+        "arenaCompare": 100,
+        "sample_number_val": 2,
+        "train_batch": 25,
+        "val_batch": 25,
+        "cpuct": 3,
+        "load_model": false,
+        "load_folder_file": ["./nnets/","apr7.pth.tar"],
+        "numItersForTrainExamplesHistory": 20,
+        "log_to_file": 1,
+        "log_embed": false,
+        "json_cache": false
+      },
+    "probe_stats": {
+        "arith-max-deg": [0, 2],
+        "arith-max-bw": [0, 35],
+        "arith-avg-bw": [0, 15],
+        "memory": [10, 3000],
+        "size": [0, 200],
+        "num-exprs": [0, 250000],
+        "num-consts": [0, 8000],
+        "num-bool-consts": [0, 100],
+        "num-arith-consts": [0, 8000],
+        "num-bv-consts": [0, 8000]
+    },
+    "tactics_config": {
+        "all_tactics": [
+            "simplify",
+            "smt",
+	    "bit-blast",
+            "propagate-values",
+	    "ctx-simplify",
+            "elim-uncnstr",
+            "solve-eqs",
+            "qfnia",
+	    "lia2card",
+	    "max-bv-sharing",
+	    "nla2bv",
+	    "qfnra-nlsat",
+	    "cofactor-term-ite"
+	],
+	"allowed_params": {
+	    "simplify": {
+		"boolean": [
+		    "elim_and",
+		    "som",
+		    "blast_distinct",
+		    "flat",
+		    "hi_div0",
+		    "local_ctx",
+		    "hoist_mul"
+		]
+	    },
+	    "nla2bv": {
+		"integer": [
+		    ["nla2bv_max_bv_size", 0, 100]
+		]
+	    }
+
+	}
+    },
+    "probes": [
+        "is-unbounded", "is-pb", "arith-max-deg", "arith-avg-deg", "arith-max-bw", "arith-avg-bw",
+        "is-qfnia", "is-qfbv-eq", "memory", "size", "num-exprs", "num-consts", "num-bool-consts", "num-arith-consts", "num-bv-consts",
+        "is-propositional", "is-qfbv"
+    ],
+    "prior_action_embed_size": 6
+}

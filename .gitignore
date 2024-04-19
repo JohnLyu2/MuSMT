@@ -1,0 +1,21 @@
+*.pyc
+.DS_Store
+.vscode
+
+/.project
+/.pydevproject
+
+# checkpoint
+checkpoints/
+
+# For PyCharm users
+.idea/
+
+# Project specific
+exp_results/
+experiment_results/
+*.out
+*.log
+
+# computer canada
+core.*

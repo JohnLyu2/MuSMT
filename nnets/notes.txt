@@ -1,0 +1,4 @@
+mar6.pth.tar - trained from qfnia/john2 - 50/60 for validation
+mar25.pth.tar - trained from qfnia/john2 - only time seriesed prior action for embedding - 52/59 for validation
+apr14.pth.tar - trained from cinteger20 - selected and normalized probes & 6 prior actions - cpuct: 3 - 63/100 for validation
+sage2apr20 - trained from sage2_15 - with qfbv - 64.5/100 for validation
