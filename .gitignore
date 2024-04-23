@@ -12,8 +12,8 @@ checkpoints/
 .idea/
 
 # Project specific
-exp_results/
-experiment_results/
+logs/
+benchmarks/
 *.out
 *.log
 

@@ -11,8 +11,8 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch import Tensor, nn
 from torch.nn import TransformerEncoder, TransformerEncoderLayer
-from transformers import (AutoModelForSequenceClassification, DistilBertModel,
-                          DistilBertTokenizer)
+# from transformers import (AutoModelForSequenceClassification, DistilBertModel,
+#                           DistilBertTokenizer)
 
 from utils import *
 # 

@@ -13,7 +13,7 @@ from .SMTLogic import Board
 import torch
 import torch.optim as optim
 
-from transformers import DistilBertTokenizer, DistilBertModel, AutoModelForSequenceClassification
+# from transformers import DistilBertTokenizer, DistilBertModel, AutoModelForSequenceClassification
 
 from .SMTNNet import SMTNNet as snnet
 
@@ -37,7 +37,6 @@ class NNetWrapper(NeuralNet):
         self.nnet = snnet(game, args)
         self.board_x = game.getBoardSize()
         self.action_size = game.getActionSize()
-        # self.tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
         self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
 
         if args.cuda:
