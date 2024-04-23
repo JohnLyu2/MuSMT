@@ -3,7 +3,6 @@ import numpy as np
 import copy
 import time
 
-
 def get_rlimit(tmpSolver):
     stats = tmpSolver.statistics()
     for i in range(len(stats)):
@@ -27,8 +26,13 @@ class Board(): # Keep its name as Board for now; may call it goal later
         self.prior_action_embed_size = prior_action_embed_size
         self.stats = stats
         self.total_timeout = total_timeout
+        # with open(self.fPath, 'r') as f: #may write to a temp file later
+        #     self.curGoal = f.read()
         with open(self.fPath, 'r') as f: #may write to a temp file later
-            self.curGoal = f.read()
+            fStr = f.read()
+        self.formula = z3.parse_smt2_string(fStr)
+        self.curGoal = z3.Goal()
+        self.curGoal.add(self.formula)
         self.step = 0 # number of times tactics have already been applied
         self.priorActions = [] # store list of tactic strings
         self.win = False
@@ -79,19 +83,19 @@ class Board(): # Keep its name as Board for now; may call it goal later
 
     def most_recent_act_str(self):
         if len(self.priorActions) == 0: return "No Prior Action"
-        return f"{self.priorActions[-1]} with total time {self.last_time:.1f} and tactic time {self.last_tac_time:.1f}"
+        return f"{self.priorActions[-1]} with total time {self.last_time:.3f} and tactic time {self.last_tac_time:.3f}"
 
     def get_embedding(self):
         measureLst = []
-        formula = z3.parse_smt2_string(self.curGoal) # error sometime; catch in MCTS.py and Runner.py
-        goal = z3.Goal()
-        goal.add(formula)
+        # formula = z3.parse_smt2_string(self.curGoal) # error sometime; catch in MCTS.py and Runner.py
+        # goal = z3.Goal()
+        # goal.add(self.curGoal)
         for pStr in self.probes:
             if pStr is None: measure = 0  # padding 0 if no probe
             elif pStr == "acc_time": measure = self.accTime/self.total_timeout
             else:
                 p = z3.Probe(pStr)
-                measure = p(goal)
+                measure = p(self.curGoal)
                 if pStr in self.stats:
                     measure = (measure-self.stats[pStr][0])/(self.stats[pStr][1]-self.stats[pStr][0])
             measureLst.append(measure)
@@ -132,24 +136,24 @@ class Board(): # Keep its name as Board for now; may call it goal later
 
     # with the current caching design, timeout cannot be changed for a formula
     def transformNextState(self, move, timeout, cache):
+        time_before = time.time()
         tmp = z3.Solver()
         self.priorActions.append(self.moves_str[move])
         rlimit_before = get_rlimit(tmp)
-        time_before = time.time()
-        formula = z3.parse_smt2_string(self.curGoal)
-        pre_goal = z3.Goal()
-        pre_goal.add(formula)
-        try:
-            pre_goal_str = str(pre_goal)
-        except:
-            self.error = True
-            return
-        key_pair = (pre_goal_str, move)
-        key_pair_str = str(key_pair)
-        if self.train and (key_pair_str in cache):
-            cache_info = cache[key_pair_str]
+        # formula = z3.parse_smt2_string(self.curGoal)
+        # pre_goal = z3.Goal()
+        # pre_goal.add(formula)
+        # try:
+        #     pre_goal_str = str(self.curGoal)
+        # except:
+        #     self.error = True
+        #     return
+        key_pair = (self.curGoal, move)
+        # key_pair_str = str(key_pair)
+        if self.train and (key_pair in cache):
+            cache_info = cache[key_pair]
             if cache_info[4] and (timeout > cache_info[5]):
-                del cache[key_pair_str]
+                del cache[key_pair]
             else:
                 self.use_cache = True
                 if timeout < cache_info[5]: # may change this later
@@ -164,20 +168,28 @@ class Board(): # Keep its name as Board for now; may call it goal later
             tTimed = TryFor(t, timeout * 1000)
             try:
                 tac_time_before = time.time()
-                new_goals = tTimed(pre_goal)
+                new_goals = tTimed(self.curGoal)
                 self.last_tac_time = time.time() - tac_time_before
+                # print(f"after tactic time: {time.time()-time_before:.3f}")
                 assert(len(new_goals) == 1)
                 new_goal = new_goals[0]
-                new_goal_str = str(new_goal)
-                if (new_goal_str == "[]") or (new_goal_str == "[False]"):
+                # new_goal_str = str(new_goal)
+                if len(new_goal) == 0:
                     self.win = True
-                    if new_goal_str == "[]": self.res = "SAT"
-                    else: self.res = "UNSAT"
-                if pre_goal_str == str(new_goal):
+                    self.res = "SAT"
+                elif len(new_goal) == 1 and z3.is_false(new_goal[0]):
+                    self.win = True
+                    self.res = "UNSAT"
+                # if (new_goal_str == "[]") or (new_goal_str == "[False]"):
+                #     self.win = True
+                #     if new_goal_str == "[]": self.res = "SAT"
+                #     else: self.res = "UNSAT"
+                # if pre_goal_str == str(new_goal):
+                if set(self.curGoal) == set(new_goal): # not sure can compare like this
                     self.nochange = True
                 else:
-                    exp = new_goal.as_expr()
-                    self.curGoal = toSMT2Benchmark(exp)
+                    # exp = new_goal.as_expr()
+                    self.curGoal = new_goal
             except Z3Exception as e:
                 self.last_tac_time = time.time() - tac_time_before
                 message = (e.args[0]).decode()
@@ -188,7 +200,7 @@ class Board(): # Keep its name as Board for now; may call it goal later
             self.last_time = time_after - time_before
             self.rlimit = rlimit_after - rlimit_before
             if self.train:
-                cache[key_pair_str] = [self.curGoal, self.win, self.nochange, self.failed, self.tac_timeout, self.last_time, self.last_tac_time, self.rlimit]
+                cache[key_pair] = [self.curGoal, self.win, self.nochange, self.failed, self.tac_timeout, self.last_time, self.last_tac_time, self.rlimit]
         self.accTime += self.last_time
         self.accRLimit += self.rlimit
         self.step += 1
@@ -210,8 +222,8 @@ class Board(): # Keep its name as Board for now; may call it goal later
     def presolve(self, timeout):
         s = z3.Solver()
         s.set("timeout", timeout * 1000)
-        formula = z3.parse_smt2_string(self.curGoal)
-        s.add(formula)
+        # formula = z3.parse_smt2_string(self.curGoal)
+        s.add(self.formula)
         res = str(s.check())
         if res == 'sat' or res == 'unsat':
             self.win = True

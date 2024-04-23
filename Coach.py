@@ -201,8 +201,12 @@ class Coach():
 
                 self.trainExamplesHistory.append(iterationTrainExamples)
 
-                log.debug(f"Data collected from Queue, {len([x for x in self.game.solveLst if x])} are solvable;\nlist: {self.game.solveLst}\nNum of training samples: {sample_size_queue}\n")
-                log.debug(f"Data collected from Processes, {len([x for x in sLst if x])} are solvable;\nlist: {sLst}\nNum of training samples: {sample_size_total}\n")
+                rew = [e[2] for e in iterationTrainExamples]
+                # mean, min, std and max of the rewards
+                log.info(f"REWARDS - Mean: {np.mean(rew):.4f}, Std: {np.std(rew):.4f}, Min: {np.min(rew):.4f}, Max: {np.max(rew):4f}")
+
+                log.info(f"Data collected from Queue, {len([x for x in self.game.solveLst if x])} are solvable;\nlist: {self.game.solveLst}\nNum of training samples: {sample_size_queue}\n")
+                log.info(f"Data collected from Processes, {len([x for x in sLst if x])} are solvable;\nlist: {sLst}\nNum of training samples: {sample_size_total}\n")
 
             if len(self.trainExamplesHistory) > self.args.numItersForTrainExamplesHistory:
                 log.warning(
@@ -251,11 +255,6 @@ class Coach():
                 self.nnet.save_checkpoint(folder=self.nnet_folder, filename='best.pth.tar')
 
     def prepareTrainExamples(self):
-
-        iterationExamples = self.trainExamplesHistory[-1]
-        rew = [e[2] for e in iterationExamples]
-        # mean, min, std and max of the rewards
-        log.info(f"REWARDS - Mean: {np.mean(rew)}, Std: {np.std(rew)}, Min: {np.min(rew)}, Max: {np.max(rew)}")
 
         trainExamples = []
         for e in self.trainExamplesHistory:

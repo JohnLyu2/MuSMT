@@ -52,8 +52,8 @@ class PlanningArena():
                 batch_instance_ids = range(i,min(i+self.val_batch, num))
                 processes = []
                 for id in batch_instance_ids:
-                    board = self.game.getInitBoard(id)
-                    processes.append(Runner(self.nnet, board, self.total_timeout, self.game.tactic_timeout_lst, q, 0)) #for now do not use presolver and no_suc in pitting
+                    # board = self.game.getInitBoard(id)
+                    processes.append(Runner(self.nnet, self.game, id, q, 0)) #for now do not use presolver and no_suc in pitting
                 for process in processes:
                     process.start()
                 t1 = time.time()

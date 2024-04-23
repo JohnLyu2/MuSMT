@@ -1,7 +1,6 @@
 from __future__ import print_function
 import sys
 sys.path.append('..')
-from Game import Game
 # from .SMTLogic import CacheTreeNode
 from .SMTLogic import Board
 import os
@@ -25,7 +24,7 @@ STEP_EXCEED_REWARD = -1
 LOSE_REWARD = -1
 MAX_STEP = 18
 
-class SMTGame(Game):
+class SMTGame():
     def __init__(self, benchmarkPath, ext, no_suc, moves_str, probes, stats, total_timeout, tactic_timeout_lst, prior_action_embed_size, train, max_step = None):
         self.train = train
         self.bPath = benchmarkPath

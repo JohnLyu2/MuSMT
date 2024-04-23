@@ -5,18 +5,18 @@ from z3 import *
 
 class Runner(multiprocessing.Process):
 
-    def __init__(self, nnet, board, total_timeout, tactic_timeout_lst, queue, z3_presolver_time): # may do something to log to a file later
+    def __init__(self, nnet, game, fID, queue, z3_presolver_time): # may do something to log to a file later
         multiprocessing.Process.__init__(self)
         assert(z3_presolver_time >= 0)
         self.z3_pre_time = z3_presolver_time
         # self.no_suc = no_suc
         self.q = queue
-        self.initialBoard = board # may not need this
-        self.curBoard = self.initialBoard
+        self.fID = fID
+        self.game = game
         self.nnet = nnet
-        self.total_timeout = total_timeout
-        self.tactic_timeout_lst = tactic_timeout_lst
-        self.action_size = len(board.moves_str)
+        self.total_timeout = game.total_timeout
+        self.tactic_timeout_lst = game.tactic_timeout_lst
+        self.action_size = len(game.moves_str)
         self.timeed_out = False
         self.nn_time = 0
         self.solver_time = 0
@@ -30,6 +30,8 @@ class Runner(multiprocessing.Process):
     # no argument for game now
     def run(self):
         time_before = time.time() # think about how to accout for time better
+        self.initialBoard = self.game.getInitBoard(self.fID)
+        self.curBoard = self.initialBoard
         if self.z3_pre_time > 0:
             self.curBoard.presolve(self.z3_pre_time)
         # priorMove = -1
