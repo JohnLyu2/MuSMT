@@ -5,6 +5,8 @@
 /.project
 /.pydevproject
 
+__pycache__/
+
 # checkpoint
 checkpoints/
 
@@ -14,6 +16,7 @@ checkpoints/
 # Project specific
 logs/
 benchmarks/
+experiment_results/
 *.out
 *.log
 

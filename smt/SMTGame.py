@@ -64,7 +64,7 @@ class SMTGame():
 
     # need to change the overridden function signature in Game.py?
     def getInitBoard(self, id):
-        assert(id < self.fSize) # may consider reiterate from the beginning when id >= size
+        assert id < self.fSize, f"formula {id} exceeds specifed size {self.fSize}" # may consider reiterate from the beginning when id >= size
         tnode = None
         bd = Board(id, self.formulaLst[id], self.no_suc, self.moves_str, self.probes, self.stats, self.total_timeout, self.prior_action_embed_size, self.train)
         return bd
